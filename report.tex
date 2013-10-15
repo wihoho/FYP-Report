@@ -20,6 +20,10 @@
 \usepackage{color}
 
 \usepackage{multirow}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
@@ -46,10 +50,10 @@
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
 \begin{document}
-\tableofcontents
+% \tableofcontents
 \newpage
-\include{introduction}
-\include{literature}
+% \include{introduction}
+% \include{literature}
 \include{imageRec}
 \include{videoRec}
 \include{domainAdaption}

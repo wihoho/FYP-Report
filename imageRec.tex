@@ -1,7 +1,7 @@
 \section {Image recognition}
 Image recognition is a very interesting topic in computer vision and pattern recognition, and the goal is to recognize different classes in images. For instance, there are trees, people, sun, moon and buildings in different images. Human can easily distinguish different classes among a set of images. However, machines are not good at such tasks. For many years, a lot of researchers are working on this topic and have achieved significant results.\\
 
-\noindent So far, a very good framework to recognize images is the so-called {\em bag of words} model, which generalizes from natural language processing (NLP). In NLP, bag of words basically aims to represent an article using histogram of word frequencies. Following this idea, in image recognition, an image is also represented as a histogram of visual words, and these visual words normally come from centroids generated from clustering algorithms. Later on, such representations of images are used to build up generic machine learning models, and the accuracy is quite impressive. During recognition phase, the most critical process is to calculate image-to-image distance. One direct way is the Euclidean distance. But a better way to calculate distance is called as Earth Mover's Distance \cite{rubner2000earth}, which finds the best matches between image parts and produces a more accurate distance.
+\noindent So far, a very good framework to recognize images is the so-called {\em bag of words} model, which generalizes from natural language processing (NLP). In NLP, bag of words basically aims to represent an article using histogram of word frequencies. Following this idea, in image recognition, an image is also represented as a histogram of visual words, and these visual words normally come from centroids generated from clustering algorithms. Later on, such representations of images are used to build up generic machine learning models, and the accuracy is quite impressive. During recognition phase, the most critical process is to calculate image-to-image distance. One direct way is the Euclidean distance. But a better way to calculate distance is called as Earth Mover's Distance \cite{rubner2000earth}, which finds the best matches between image parts and produces a more accurate distance. \\
 
 \noindent In the following of this section, an image recognition framework consisting of 4 steps is first introduced. Secondly, Earth Mover's distance and its applications in image recognition is talked about. Lastly, the method to identify duplicates in a cluster of images used in this project are presented, and this method is going to be applied in video recognition to show the effectiveness of Earth Mover's distance.
 
@@ -10,17 +10,74 @@ Image recognition is a very interesting topic in computer vision and pattern rec
 Generally, there are 4 below steps to go:
 
 \subsubsection{Extract SIFT features from each image}
-It is almost impossible to directly rely on pixel data of images to perform recognition tasks, and the main reason is because such pixel data does not possess much discriminative power. Therefore, other approaches to represent images are needed. One approach is to extract features from images and use those features to represent images compactly. There are generally two categories of features: global features and local features.
+It is almost impossible to directly rely on pixel data of images to perform recognition tasks, and the main reason is because such pixel data does not possess much discriminative power. Therefore, other approaches to represent images are needed. One approach is to extract features from images and use those features to represent images compactly. There are generally two categories of features: global features and local features. As the name stated, global features encode a whole image based on the overall distribution of color, texture, or edge information. Some popular global features include color histogram and Gabor texture \cite{manjunath1996texture}. On the other hand, local features refer to features extracted from local patches (or interest points). Popular local feature extraction methods include Harris-Laplace \cite{lindeberg1998feature}, Hessian \cite{mikolajczyk2004scale}, Scale Invariant Feature Transform \cite{lowe1999object} and so forth. Among popular local features, {\em Scale Invariant Feature Transform (SIFT)}, introduced by David Lowe in \cite{lowe1999object}, is one of the most successful local image descriptors in the last decade. Because of the robustness of SIFT shown in various literatures \cite{lowe1999object,duan2012visual,zhou2008sift}, SIFT is chosen to be the feature to represent images through the whole period of this project.\\
 
-Features play an important role in recognition systems.
+\noindent Now it's time to briefly elaborate details about SIFT. There are two steps when performing extracting SIFT features. The first step is to identify interest points, and the criteria is based on {\em difference-of-Gaussian functions}:
+$$D(x, y, \sigma) = (G(x, y, k\sigma) - G(x, y, \sigma)) * I(x, y)$$
+where $G$ is the Gaussian 2D kernel, $I(x, y)$ is an input image and $k$ is a constant multiplicative factor which separates two nearby scales. After computing $D(x, y, \sigma)$ for all sample points, those sample points with local maxima and minima of $D(x, y, \sigma)$ compared with their neighbors are selected to be interest points. In order to better localize interest points, these candidates locations are filtered to remove unstable points based on criteria including low contrast and edge response. Please refer to the paper \cite{lowe2004distinctive} for details on removing unstable points. The next step is to compute a descriptor based on those interest points located in previous step. For each interest point, a descriptor is created by first computing the gradient magnitude and orientation in a grid of subregions around that specific interest point. These gradient orientations are then accumulated into orientation histograms. Finally, these histograms are concatenated to form a descriptor vector. The recommended setting uses $4 \times 4$ subregions with 8 bin histogram, which results in a 128 bin histograms ($4 \times 4 \times 8 = 128$). Figure 4 below demonstrates the whole process to construct SIFT descriptor. \\
+
+\begin{figure}[!ht]
+\centering
+  \includegraphics[width=1\textwidth]{./SIFT_Descriptor.png}
+\caption{SIFT descriptor \cite{solem2012programming} (a) a frame with $4 \times 4$ subregions around an interest point. (b) an 8 bin histogram over the direction of gradient in one subregion. (c) all histograms in their respective subregions. (d) all 16 histograms are concatenated to form a 128 ($16 \times 8$) dimensional vector.}
+\end{figure}
+
+\noindent For simplicity, an open source library VLFEAT \cite{vedaldi08vlfeat} is adopted to extract SIFT from images. A typical image of size $200 \times 200$ normally produces around 800 SIFT features.  
+
+\subsubsection{Build up visual vocabulary from features of training set}
+Although SIFT features have been extracted, these 128 dimensional raw features are still not an ideal representation because of causes including the curse of dimensionality. Thus, a visual vocabulary is needed to map high dimensional descriptors to words by quantizing the feature space. Commonly, vocabulary is built through applying K-Means \cite{lloyd1982least} clustering algorithm on available features, and the final centroids output by K-Means are treated as representative words. The basic K-means algorithm goes as below:
+
+\begin{algorithm}
+  \caption{Basic K-means Algorithm}
+  \begin {algorithmic}[1]
+  \State Randomly select K points as the initial centroids
+  \Do 
+    \State Form K clusters by assigning all points to their closest centroids.
+    \State Recompute the centroid of each cluster
+  \doWhile Centroids are changed
+  \end{algorithmic}
+\end{algorithm}
+
+\noindent Based on the above algorithm, it is easy to see that the time complexity is $O(n*K*I*d)$, where $n$ is the number of points, $K$ is the number of clusters, $I$ is the number of iterations and $d$ is the number of dimensions. This classical K-means algorithm works fine for small data sets but is very expensive for large data sets. Later on, vocabulary is also needed for video recognition where the number of features is nearly 0.4 million after sampling. By noticing that the available computational resource is limited, it is not affordable to apply classical K-Means on large data sets. Therefore, better method is needed to build up vocabularies.  Mini-Batch K-Means \cite{sculley2010web}, a variant of KMeans algorithm which uses mini-batches to reduce the computation time, is a good alternative. In contrast to other algorithms which reduces the convergence time of k-means, mini-batch k-means produces results that are generally only slightly worse than the standard algorithm. The details about mini-batch k-means are presented as follows:
+
+\begin{algorithm}
+  \caption{Mini-batch K-Means}
+  \begin{algorithmic}[1]
+  \State Given: $k$, mini-batch size $b$, iteration $t$, data set $X$
+  \State Initialize each $c \in C$ with an $x$ picked randomly from $X$
+  \State $v \gets 0$
+  \For {$i = 1$ to $t$}
+  \State $M \gets b$ examples picked randomly from $X$
+  
+  \For {$x \in M$}
+  \State $d[x] \gets f(C, x)$ \Comment{Cache the nearest center to $x$}
+  \EndFor
+
+  \For {$x \in M$}
+  \State $c \gets d[x]$ \Comment{Get cached center for this $x$}
+  \State $v[c] \gets v[c] + 1$ \Comment{Update per-center counts}
+  \State $\eta \gets \frac{1}{v[c]}$ \Comment{Get per-center learning rate}
+  \State $c \gets (1 - \eta)c + \eta x$ \Comment{Take gradient step}
+  \EndFor
+  
+  \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+\noindent Once this vocabulary is built, a histogram whose length equals to the size of vocabulary is built for each image. Afterward, features of images are examined to construct their histograms. For each SIFT feature, the nearest word to this feature is found, and the bin representing the found word is increased by one. After finishing examining all features, a histogram is constructed and is used to represent the respective image. As a result, all images are transformed from pixels to fixed length histograms. In image recognition experiments, the number of centroids is set to be 300 when performing Mini-Batch K-Means. Thus, all images are converted into 300 dimensional histograms. 
+
+\subsubsection{Construct a pyramid of three levels for each image}
+
+
+
+
+
+
+
+\subsubsection{Classify based on above representations}
 
 
 \begin{enumerate}
-	\item {\bfseries Extract SIFT features from each image}
-	\\SIFT is short for scale-invariant feature transform introduced by David G. Lowe in 1999 \cite{lowe1999object}. Given SIFT's ability to find distinctive key points that are invariant to location, scale and rotation, it is very robust to be used for image recognition. Here for simplicity, an open source library VLFEAT \cite{vedaldi08vlfeat} is adopted to extract this feature from images. The dense SIFT feature is extracted at path size 16 with step to be 8, and the number of dimension for each feature is 128.
-
-	\item {\bfseries Build up visual vocabulary from features of training set}
-  \\Similar to natural language processing, a vocabulary is needed to represent images. Commonly, K-means algorithm is performed on features resulting from training set, and the final centroids are treated as words of vocabulary. In this experiment, there are 157920 SIFT features extracted from training images. Due to this large number, MiniBatchKMeans \cite{sculley2010web}, a variant of KMeans algorithm which uses min-batches to reduce the computation time in library scikit-learn \cite{scikit-learn}, is used to generate a vocabulary, and the number of centroids is set to be 300. Thus, the vocabulary size is 300.
 
 	\item {\bfseries Construct a pyramid of three levels for each image}
   \\The pyramid match kernel is introduced by Kristen Grauman and Trevor Darrell \cite{grauman2005pyramid} in 2005. In this method, a pyramid is built for each image level by level through increasing histogram resolution. However, this method ignores spatial information among images. After one year, spatial pyramid matching is introduced \cite{lazebnik2006beyond}. Like the name has stated, pyramid is built by taking spatial information into consideration. There are three levels built: level 0 takes the whole image as input and produce a single histogram; level 1 divides an image into 4 parts equally and produces 4 histogram in total; level 2 divides an image into 16 parts equally and outputs 16 histograms in total. Also, the weight is decreasing with level increasing when calculating distances between images. In this experiment, the spatial pyramid matching is implemented independently without help from libraries. Since the vocabulary size is 300, the numbers of dimension are 300, 1500, 6300 for $Level 1$, $(Level 1 + Level 2)$ and $(Level 1 + Level 2 + Level 3)$ respectively.
