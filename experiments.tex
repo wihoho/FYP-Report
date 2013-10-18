@@ -1,1 +1,60 @@
 \section{Experiments}
+\subsection{Image recognition evaluation}
+\subsubsection{Data set description}
+\subsubsection{Performance of spatial pyramid matching}
+
+
+\begin{table}[!ht]
+    \begin{center}
+
+      \begin{tabular} {cccc}
+      \hline
+    	\head{SVM} & \head{One-level} & \head{Two-level} & \head{Three-level}\\
+      \hline
+      Linear & 74.17 & 80 & {\bf 87.5} \\
+      Poly & 70 & 62.5 & 31.67 \\
+      RBF & 37.5 & 83.33 & 74.17 \\
+      Sigmoid & 16.67 & 16.67 & 16.67 \\
+      Histogram Intersection & 79.17 & 82.5 & {\bf 85} \\
+      \hline
+      \end{tabular}
+    
+    \end{center}
+    \caption{Recognition accuracies (percent) of different spatial pyramids using SVM with different kernels}
+\end{table}
+
+\begin{table}[!ht]
+	\begin{center}
+
+	  \begin{tabular} {cccc}
+	  \hline
+		\head{} & \head{One-level} & \head{Two-level} & \head{Three-level}\\
+	  \hline
+      KNN & 50.83 & 45 & 48.33 \\
+      \hline
+      \end{tabular}
+    
+    \end{center}
+    \caption{Recognition accuracies (percent) of different spatial pyramids using KNN}
+\end{table}
+
+
+\subsubsection{Performance of earth mover's distance}
+
+\begin{table}[!ht]
+	\begin{center}
+
+	  \begin{tabular} {ccccc}
+	  \hline
+		\head{} & \head{RBF} & \head{LAP} & \head{ID} & \head{ISD}\\
+	  \hline
+      Aligned Distance & 79.44 & 76.11 & 73.89 & 75.56 \\
+      Unaligned Distance & 78.89 & 75.56 & 73.33 & 75 \\
+      \hline
+      \end{tabular}
+    \end{center}
+    \caption{Comparison of recognition accuracy between aligned distance and unaligned distance}
+\end{table}
+
+
+\subsection{Video recognition}

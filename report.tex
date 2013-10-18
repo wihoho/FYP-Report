@@ -14,6 +14,9 @@
 
 % table package
 \usepackage{multirow}
+\usepackage{tabu}
+\usepackage{tabularx}
+\usepackage{pbox}
 
 % citation style
 \usepackage{listings}
@@ -25,10 +28,33 @@
 \usepackage{algorithmicx}
 \algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
 
+
+\NeedsTeXFormat{LaTeX2e}
+% \ProvidesPackage{math}
+% \RequirePackage{amsmath,amsthm,amsfonts,amssymb}
+
+% SVM
+\providecommand{\pd}[2]{\frac{\partial #1}{\partial #2}}
+
+\providecommand{\abs}[1]{\lvert #1 \rvert}
+\providecommand{\norm}[1]{\lVert #1 \rVert}
+\providecommand{\inprod}[2]{\langle{#1},{#2}\rangle}
+\providecommand{\avg}[1]{\langle#1\rangle}
+
+\providecommand{\set}[1]{\{#1\}}
+
+\DeclareMathOperator{\Prob}{P}
+\DeclareMathOperator{\E}{E}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\sign}{sign}
+% SVM
+
+\newcommand{\argmax}[1]{\underset{#1}{\operatorname{arg}\,\operatorname{max}}\;}
+
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
-
 \lstset{frame=tb,
   language=Java,
   aboveskip=3mm,
@@ -49,17 +75,20 @@
 \newcommand{\head}[1]{\textnormal{\textbf{#1}}}
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
 
+
+\usepackage[font={it}]{caption}
+
 \begin{document}
 % \tableofcontents
 \newpage
 % \include{introduction}
 % \include{literature}
-\include{imageRec}
+% \include{imageRec}
 \include{videoRec}
-\include{domainAdaption}
-\include{experiments}
-\include{webDemo}
-\include{conclusion}
+% \include{domainAdaption}
+% \include{experiments}
+% \include{webDemo}
+% \include{conclusion}
 
 \newpage
 \bibliographystyle{IEEEtranS}
