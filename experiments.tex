@@ -1,6 +1,9 @@
 \section{Experiments}
 \subsection{Image recognition evaluation}
 \subsubsection{Data set description}
+This image data set comes from \cite{li2011actions}, in which there are six classes (shooting, playing guitar, running, phoning, riding bike and riding horse). 
+
+
 \subsubsection{Performance of spatial pyramid matching}
 
 
@@ -155,4 +158,40 @@
 
     \end{center}
     \caption{Recognition accuracies (percent) using distances calculated on original videos and distances calculated on compressed videos.}
+\end{table}
+
+
+\begin{table}[!ht]
+  \begin{center}
+  \scalebox{0.8}{
+    \begin{tabular} {cccccccc}
+    \hline
+    \head{} &\head{SVM\textunderscore T} &\head{SVM\textunderscore AT} &\head{FR} &\head{A-SVM} &\head{MKL} &\head{DTSVM} &\head{A-MKL} \\
+    \hline
+    L0 & $44.33 \pm 2.61$ & $52.21 \pm2.54$ & $52.33 \pm 2.20$ & $47.03 \pm3.26$ & $50.82 \pm2.16$ & $47.14 \pm3.26$ & $54.29 \pm 2.21$ \\
+L1 Unaligned & $43.55 \pm3.46$&  $55.37 \pm2.26$&  $55.95 \pm 3.79$  &$45.86 \pm4.39$ & $55.08 \pm 6.17$  &$50.97 \pm 1.38$ & $54.26 \pm 3.46$ \\
+L1 Aligned & $44.08 \pm 3.25$ & $57.56 \pm3.02$ & $53.91 \pm 1.48$ & $45.42 \pm 3.62$ &$53.81 \pm 3.86$ & $53.32 \pm 2.56$ & $57.45 \pm 1.64$ \\
+
+
+Voc2005 Soft Assignment & 
+$44.79 \pm 2.55$ & $47.80 \pm 1.67$ & $51.89 \pm 1.99$ & $47.41 \pm 3.13$ & $47.16 \pm 1.77$ & $45.05 \pm 4.07$ & $51.08 \pm 2.87$ \\
+Specialized GMM (S 128) &
+$32.91 \pm 2.20$ & $33.15 \pm 1.78$ & $41.78 \pm 3.98 $ &$37.07 \pm 3.52$  &$33.64 \pm 0.74$ & $46.61 \pm 2.41$ & $35.88 \pm 1.98$ \\
+
+Voc1000 Level 0 &
+$ 44.23 \pm 3.20 $ & $53.67 \pm 3.29$ & $52.16 \pm 4.00$ & $45.07 \pm 4.05$ & $52.33 \pm 4.23$ & $49.90 \pm 3.47$ & $ 55.99\pm 3.79$ \\
+
+Voc1000 Gaussain Assign &
+$45.20 \pm 3.04$ & $56.90 \pm 2.79$ & $54.03\pm 4.02$ & $46.62 \pm 3.14 $ & $55.47 \pm 4.11$ & $53.41 \pm 3.29$ & $59.16 \pm 3.38$ \\
+
+Aligned L1 + Gau Ass &
+$ 44.69\pm 2.84$ & $ 60.21 \pm 1.94 $ & $55.29 \pm 3.00$ & $46.28 \pm 4.23 $ & $ 58.36 \pm 3.75$ & $ 57.01 \pm 2.45 $ & $61.40 \pm 1.91$ \\
+
+Aligned L1 + Gau Ass + Voc1000 L0 &
+$44.92 \pm 2.92$ & $58.80 \pm 2.68$ & $ 54.15 \pm 3.20 $ & $45.76 \pm 4.10$ & $56.82 \pm 4.00$ & $56.52 \pm 2.70$ & $59.83 \pm .82$ \\
+    \hline
+    \end{tabular}
+}
+    \end{center}
+    \caption{Means and standard deviations (percent) of MAPs over six events for all methods}
 \end{table}
