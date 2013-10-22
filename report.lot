@@ -1,0 +1,15 @@
+\contentsline {table}{\numberline {1}{\ignorespaces Kernel functions}}{20}
+\contentsline {table}{\numberline {2}{\ignorespaces Distance matrix between image $A$ and $B$}}{22}
+\contentsline {table}{\numberline {3}{\ignorespaces Four kernel types which have been tested. $D(I_i, I_j)$ represents the distance between $I_i$ and $I_j$. The kernel parameter $\gamma $ is selected to be the default one $\gamma = \frac {1}{A}$, where $A$ is the mean value of the squared distances between training samples as suggested in \cite {laptev2008learning}.}}{24}
+\contentsline {table}{\numberline {4}{\ignorespaces Weighting schemes for visual-word feature \cite {yang2007evaluating}. Note that $tf_i$ is number of times a visual word $t_i$ appears in an image, $N$ is the total number of images in the corpus, and $n_i$ is the number of images having visual word $t_i$.}}{31}
+\contentsline {table}{\numberline {5}{\ignorespaces Recognition accuracies (percent) of different spatial pyramids using SVM with different kernels}}{46}
+\contentsline {table}{\numberline {6}{\ignorespaces Recognition accuracies (percent) of different spatial pyramids using KNN}}{46}
+\contentsline {table}{\numberline {7}{\ignorespaces Comparison of recognition accuracy between aligned distance and unaligned distance}}{47}
+\contentsline {table}{\numberline {8}{\ignorespaces Number of videos in each class from Kodak and Youtube}}{47}
+\contentsline {table}{\numberline {9}{\ignorespaces Means and standard deviations (percent) of MAPs over six events at different levels using SVM with different kernels.}}{49}
+\contentsline {table}{\numberline {10}{\ignorespaces Means and standard deviations (percent) of MAPs over six events using different mechanisms to build histograms}}{50}
+\contentsline {table}{\numberline {11}{\ignorespaces Recognition accuracies (percent) using distances calculated on original Youtube videos and distances calculated on Youtube compressed videos.}}{50}
+\contentsline {table}{\numberline {12}{\ignorespaces Means and standard deviations (percent) of MAPs over six events using different GMMs}}{51}
+\contentsline {table}{\numberline {13}{\ignorespaces Means and standard deviations (percent) of recognition accuracies using concept attributes}}{52}
+\contentsline {table}{\numberline {14}{\ignorespaces Experimental settings}}{54}
+\contentsline {table}{\numberline {15}{\ignorespaces Means and standard deviations (percent) of MAPs over six events for all methods}}{54}

@@ -17,7 +17,7 @@ It is almost impossible to directly rely on pixel data of images to perform reco
 D(x, y, \sigma) = (G(x, y, k\sigma) - G(x, y, \sigma)) * I(x, y)
 \end{equation}
 
-\noindent where $G$ is the Gaussian 2D kernel, $I(x, y)$ is an input image and $k$ is a constant multiplicative factor which separates two nearby scales. After computing $D(x, y, \sigma)$ for all sample points, those sample points with local maxima and minima of $D(x, y, \sigma)$ compared with their neighbors are selected to be interest points. In order to better localize interest points, these candidates locations are filtered to remove unstable points based on criteria including low contrast and edge response. Please refer to the paper \cite{lowe2004distinctive} for details on removing unstable points. The next step is to compute a descriptor based on those interest points located in previous step. For each interest point, a descriptor is created by first computing the gradient magnitude and orientation in a grid of subregions around that specific interest point. These gradient orientations are then accumulated into orientation histograms. Finally, these histograms are concatenated to form a descriptor vector. The recommended setting uses $4 \times 4$ subregions with 8 bin histogram, which results in a 128 bin histograms ($4 \times 4 \times 8 = 128$). Figure 4 below demonstrates the whole process to construct SIFT descriptor. \\
+\noindent where $G$ is the Gaussian 2D kernel, $I(x, y)$ is an input image and $k$ is a constant multiplicative factor which separates two nearby scales. After computing $D(x, y, \sigma)$ for all sample points, those sample points with local maxima and minima of $D(x, y, \sigma)$ compared with their neighbors are selected to be interest points. In order to better localize interest points, these candidates locations are filtered to remove unstable points based on criteria including low contrast and edge response. Please refer to the paper \cite{lowe2004distinctive} for details on removing unstable points. The next step is to compute a descriptor based on those interest points located in previous step. For each interest point, a descriptor is created by first computing the gradient magnitude and orientation in a grid of subregions around that specific interest point. These gradient orientations are then accumulated into orientation histograms. Finally, these histograms are concatenated to form a descriptor vector. The recommended setting uses $4 \times 4$ subregions with 8 bin histogram, which results in a 128 bin histograms ($4 \times 4 \times 8 = 128$). Figure 1 below demonstrates the whole process to construct SIFT descriptor. \\
 
 \begin{figure}[!ht]
 \centering
@@ -274,7 +274,7 @@ The way which has been implemented to check whether two images are near duplicat
   \caption{$8 \times 36$ Hash Table \cite{zhao2007near}}
   \end{figure}
   
-  The hash table is composed of $8 \times 36$ bins as shown in Figure 3. Given each point $P = [p_1, p_2,..., p_{36}]$ of $I_1$, the index of $p_i$ is hashed to, 
+  The hash table is composed of $8 \times 36$ bins as shown in Figure 7. Given each point $P = [p_1, p_2,..., p_{36}]$ of $I_1$, the index of $p_i$ is hashed to, 
   $$H(p_i) = \lfloor p_i \times 4 \rfloor$$ 
   Since the dimension is 36, $P$ is repeatedly indexed into the corresponding bin for 36 times, according to its quantized value in a particular dimension.   
   
