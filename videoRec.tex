@@ -1,7 +1,7 @@
 \section {Video recognition}
 As introduced in the section of image recognition, recognition tasks could be simplified into a problem of calculating distances between different samples in the evaluated data set. This is because once the distance matrix is calculated, this distance matrix could be input into K-nearest neighbor algorithms or better approaches like Support Vector Machine for recognition. However, it is not so easy to compare two raw videos in quantitative way and thus difficult to calculate distances using raw video data. In order to resolve this problem, a compact representation similar to image for each video clip is needed. \\
 
-\noindent The rest of this section is organized as follows. Firstly, two different representation f video are introduced followed by the distance calculation for each of these two representations. Once the task of calculating distances is finished, four types of kernels used in image recognition are tested. Finally, another method using concept attributes is presented. 
+\noindent The rest of this section is organized as follows. Firstly, two different representations of video are introduced followed by the distance calculation for each of these two representations. Once the task of calculating distances is finished, four types of kernels used in image recognition are tested. Finally, another method using concept attributes is presented. 
 
 \subsection{Representations of videos}
 	\subsubsection{Bag of words (BoW)}
@@ -24,7 +24,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 
 	\begin{itemize}
 		\item{Soft assignments}\\
-		Soft assignment allows that a visual feature could be assigned to multiple words rather than only one word. In doing so, more valuable information is retained during quantization process and thus might provide more discriminative power. An straightforward approach \cite{jiang2007towards} is that the top N nearest words are selected for each visual feature. Let's say the size of vocabulary is $K$, and thus a $K$-dimensional vector $T = [t_1, t_2,..., t_K]$  is used to represent an image. The algorithm to construct this vector goes as below.\\
+		Soft assignment allows that a visual feature could be assigned to multiple words rather than only one word. In doing so, more valuable information is retained during quantization process and thus might provide more discriminative power. A straightforward approach \cite{jiang2007towards} is that the top N nearest words are selected for each visual feature. Let's say the size of vocabulary is $K$, and thus a $K$-dimensional vector $T = [t_1, t_2,..., t_K]$  is used to represent an image. The algorithm to construct this vector goes as below.\\
 
 		  \begin{algorithm}
 		  \caption{Build histogram with soft assignment}
