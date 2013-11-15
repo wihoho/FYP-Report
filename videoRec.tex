@@ -1,9 +1,9 @@
-\section {Video recognition}
+\section {Video Recognition}
 As introduced in the section of image recognition, recognition tasks could be simplified into a problem of calculating distances between different samples in the evaluated data set. This is because once the distance matrix is calculated, this distance matrix could be input into K-nearest neighbor algorithms or better approaches like Support Vector Machine for recognition. However, it is not so easy to compare two raw videos in quantitative way and thus difficult to calculate distances using raw video data. In order to resolve this problem, a compact representation similar to image for each video clip is needed. \\
 
 \noindent The rest of this section is organized as follows. Firstly, two different representations of video are introduced followed by the distance calculation for each of these two representations. Once the task of calculating distances is finished, four types of kernels used in image recognition are tested. Finally, another method using concept attributes is presented. 
 
-\subsection{Representations of videos}
+\subsection{Representations of Videos}
 	\subsubsection{Bag of words (BoW)}
 	\paragraph{Naive BoW}
 	Video consists of a series of consecutive frames and generally presents frames at rates ranging from 20 to 50 frames per second. To be simple, frames sampled from a video every one second could be used to represent this video. For instance, a two-minute video is then represented by 120 frames. With the same representation of image illustrated in section of image recognition, these 120 frames are then converted into 120 histograms. At last, these 120 histograms are stacked to represent this two-minute video. \\
@@ -134,7 +134,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 
 	\noindent The E-step and M-step are repeated until convergence. In the end, specialized GMM is modeled as $\hat\theta = \{\hat\mu_1, \cdots, \hat\mu_K \}$. It is worthy noting that all video clips are thus converted into equal size vectors if $\hat\theta$ is treated as a vector.
 
-\subsection{Distance calculations}
+\subsection{Distance Calculations}
 	Now that videos are represented in either stack of histograms or specialized GMM, it is time to calculate video-to-video distance for these two representations. For bag of word model, EMD is incorporated into distance calculation. Given the property that EMD only needs the best matches between segments, the distance between videos with different frames could also be calculated. This idea is originally proposed by Xu and Chang \cite{xu2007visual}, and it is now extended to Aligned Space-Time Pyramid Matching \cite{duan2012visual}. For specialized GMM representation, the author \cite{zhou2008sift} propose a distance formula generated from Kullback-Leibler divergence based on the assumption that the covariance matrices are unchanged during the Maximum a Posteriori adaption process.
 	
 	\subsubsection{Aligned space-time pyramid matching}
@@ -190,7 +190,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 
 \noindent Once video-to-video distances using above approaches are calculated, they will be transformed into Gaussian, Laplacian, ISD and ID kernels for recognition using SVM. Due to the poor performance of KNN, there is no experiment using KNN to recognize videos. 
 
-\subsection{Other approach: concept attributes}
+\subsection{Other Approach: Concept Attributes}
 The approaches introduced above are under direct classification category, which model test videos in Bow or GMM and predict their labels directly. However, in real word, many events in videos could be really complex. For example, in the behavior of ``changing a vehicle tire'', events like ``person opening a car'', ``person using wrench'' and ``person holding something'' may be involved. However, Bow and GMM representations fall to catch these low-level events. To be able to better understand complex events, researchers have proposed to use concept attributes to describe images and videos \cite{liu2013video,natsev2010ibm, natarajan2011bbn}. \\
 
 \noindent There are three stages to use concept attributes.

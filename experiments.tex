@@ -1,5 +1,5 @@
 \section{Experiments}
-\subsection{Image recognition}
+\subsection{Image Recognition}
 \subsubsection{Data set description}
 The image data set, in which there are six classes (shooting, playing guitar, running, phoning, riding bike and riding horse) as shown in Figure 13, comes from \cite{li2011actions}. For each class, there are 60 images with different backgrounds, different persons and different viewpoints. 
 
@@ -50,10 +50,16 @@ where correct predictions represent the number of testing samples which are corr
     \caption{Recognition accuracies (percent) of different spatial pyramids using KNN}
 \end{table}
 
+\begin{figure}[!ht]
+\centering
+  \includegraphics[width=1\textwidth]{./imagPer.png}
+\caption{Chart representation of combined Table 5 and Table 6}
+\end{figure}
+
 \noindent Table 5 above reports the recognition accuracies using SVM with different kernels for different pyramids. The kernel types which projects samples into higher dimensional space like ``Poly'' and ``RBF'' abd ``Sigmoid'' performed much worse than ``Linear'' and ``Histogram Intersection''. Also, it is easy to see that the recognition accuracies increased by fusing information from multiple levels. For ``Linear'' and ``Histogram Intersection'', their performances were improved significantly from one-level pyramid to three-level pyramid, and ``Linear'' achieved the best result $87.5 \%$ while ``Histogram Intersection'' achieved the second best result $85 \%$ at three-level pyramid. Table 6 depicts the performance of KNN when the number of neighbors was set to 5. Compared with reasonable result of SVM, KNN did not perform quite well. The best result achieved at one-level $50.83\%$ is much smaller than $74.17\%$ which was achieved by SVM with ``Linear'' kernel. Such result makes sense because it is generally thought that KNN performs worse than SVM since KNN is a lazy learner which does not consider the global information. 
 
 \subsubsection{Performance of earth mover's distance}
-EMD was also experimented to examine its effectiveness in recognition. Following the method introduced before, each image was divided into 4 pieces equally, and EMD attempted to align these 4 pieces. In this experiment, the distance matrix calculated with EMD was referred as aligned distance while the distance matrix without EMD was referred as unaligned distance. Once distances were calculated, they were transformed into four different kernels. Finally, these kernel matrices are input into SVM for classification. Unlike previous division of training and testing samples, this experiment randomly selected $50\%$ images as training data and the other $50\%$ as testing data. The result using the above settings is recorded in Table 7. 
+EMD was also experimented to examine its effectiveness in recognition. Following the method introduced before, each image was divided into 4 pieces equally, and EMD attempted to align these 4 pieces. In this experiment, the distance matrix calculated with EMD was referred as aligned distance while the distance matrix without EMD was referred as unaligned distance. Once distances were calculated, they were transformed into four different gram matrices through four different kernel functions (RBF, LAP, ID and ISD). Finally, these kernel matrices were input into SVM for classification. Unlike previous division of training and testing samples, this experiment randomly selected $50\%$ images as training data and the other $50\%$ as testing data. The result using the above settings is recorded in Table 7. 
 
 \begin{table}[!ht]
 	\begin{center}
@@ -68,15 +74,14 @@ EMD was also experimented to examine its effectiveness in recognition. Following
       \end{tabular}
     \end{center}
 
-    \caption{Comparison of recognition accuracy between aligned distance and unaligned distance}
+    \caption{Comparison of recognition accuracy (percent) between aligned distance and unaligned distance}
 \end{table}
 
-\noindent For all four kernel types, aligned distance performed better than unaligned distance. Though slightly, it shows the robustness of EMD which gives a more accurate image-to-image distance. Also, it is worth noting that these four kernels output different results. So it is important to select a good kernel in order to build a robust classifier. 
+\noindent For all four kernel types, aligned distance performed better than unaligned distance. Though slightly, it shows the robustness of EMD which gives a more accurate image-to-image distance. Also, it is worth noting that these four kernels output different results. So it is important to select kernel function in order to build a robust classifier. Given the fact that there are different kernels, is it possible to combine them? The answer is yes, and it refers to multiple kernel learning, which will be experimented in the following subsection on video recognition.
 
-
-\subsection{Video recognition}
+\subsection{Video Recognition}
 \subsubsection{Data set description}
-The data set used in this experiment is retrieved from Visual Computing Group of Nanyang Technological University, and this data set has been used for comprehensive experiments in \cite{duan2012visual}. There are two different domains \cite{loui2007kodak}: one comes from the Kodak Consumer Video Benchmark Data set while the other comes from Youtube. Also, there are two types of features: one is SIFT while the other one is space-time feature. According to the accuracies of different feature reported in \cite{duan2012visual}, SIFT is preferred. There are six different classes, and the numbers of videos in each class from different domains are summarized in the below table.
+The data set used in this experiment was retrieved from Visual Computing Group of Nanyang Technological University, and this data set had already been used for comprehensive experiments in \cite{duan2012visual}. There are two different domains \cite{loui2007kodak}: one comes from the Kodak Consumer Video Benchmark Data set while the other comes from Youtube. Also, there are two types of features: one is SIFT while the other one is space-time feature. According to the accuracies of different features reported in \cite{duan2012visual}, SIFT performed much better than space-time features. As a result, SIFT was chosen to conduct experiments. There are six different classes, and the numbers of videos in each class from different domains are summarized in the below table.
 
   \begin{table}[!ht]
     \begin{center}
@@ -95,12 +100,21 @@ The data set used in this experiment is retrieved from Visual Computing Group of
   \end{table}
 
 \subsubsection{Performance of aligned space-time pyramid matching}
-To examine Aligned Space-Time Pyramid Matching, a visual vocabulary is firstly needed in order to convert videos into stacks of histograms. The visual vocabulary with 2500 words was built on SIFT features sampled from features of Kodak data set. Due to a lack of memory, the size of training data was $167837 \times 128$. Although the training size was relatively small, fortunately, it still produced comparable results compared with performances reported in \cite{duan2012visual}. The next step was to convert all Kodak videos into either one stack of histograms (level 0) or 8 stacks of histograms (level 1) based on the visual vocabulary built before. Once Bow models for all Kodak videos are built, EMD was employed to calculated video-to-video distances among all these videos. In this experiment, the C program wrote by Rubner, who is the proposer of Earth Mover's distance \cite{rubner2000earth}, was used. To integrate this C program with the main codes written in Python, an interface was added to enable communications between these two modules. Please also note that the time taken by calculating level one distances is around 65 times of that taken by calculating level 0 distance. When calculating level one distance, the number of pairwise distances needed is $8 \times 8 = 64$. If the aligned process is also considered, the number of times to invoke EMD becomes 65. However, for level 0 distance, only one time is needed to call EMD when calculating the distance between two videos. Similar to the settings in image recognition, distances were then transformed into kernels using Gaussian, Laplacian, ISD and ID. The final step was to employ SVM to perform recognition based on these gram matrices. Due to the poor performance of KNN, KNN was not tried here. Furthermore, a new mode fusing SVM scores from Gaussian, Laplacian, ISD and ID was tried, and this fusing process is defined as
+To examine Aligned Space-Time Pyramid Matching, a visual vocabulary was firstly needed in order to convert videos into stacks of histograms. The visual vocabulary with 2500 words was built on SIFT features sampled from features of Kodak data set. Due to a lack of physical memory, the size of training data was only $167837 \times 128$, where $167837$ was the number of SIFT features. Although the training size was relatively small, fortunately, it still produced comparable results compared with that reported in \cite{duan2012visual}. The next step was to convert all Kodak videos into either 1 stack of histograms (level 0) or 8 stacks of histograms (level 1) based on the visual vocabulary built before. Once BoW models for all Kodak videos were built, EMD was employed to calculated video-to-video distances among all these videos. In this experiment, the C program wrote by Rubner, who is the proposer of Earth Mover's distance \cite{rubner2000earth}, was used. To integrate this C program with the main codes written in Python, an interface was added to enable communications between C and Python codes. Please also note that the time taken by calculating level one distances is around 65 times of that taken by calculating level 0 distance. When calculating level one distance, the number of pairwise distances needed is $8 \times 8 = 64$. If the aligned process is also considered, the number of times to invoke EMD becomes 65. However, for level 0 distance, only one time is needed to call EMD when calculating the distance between two videos. Similar to the settings in image recognition, distances were then transformed into gram matrices using Gaussian, Laplacian, ISD and ID. The final step was to employ SVM to perform recognition based on these gram matrices. Due to the poor performance of KNN, KNN was not tested here. Furthermore, a new mode fusing SVM scores from Gaussian, Laplacian, ISD and ID was tried, and this fusing process is defined as
+
 \begin{equation}
 f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
 \end{equation}
 
 \noindent where $N$ is the number of classifiers, and $f_i$ is the score output by $i$th classifier. In this case, $N = 4$, and the four SVM classifiers were built from Gaussain, Laplacian, ISD and ID kernel matrices. \\
+
+\noindent Based on scores output by different settings, Average Precision (AP), which is the most widely used performance metric of video event recognition, was calculated. Denote $R$ as the number of true relevant videos in the dataset. At any index $j$, let $R_j$ be the number of true relevant videos in the top $j$ list. Average Precision is defined as
+
+\begin{equation}
+AP = \frac{1}{R} \sum_{j} \frac{R_j}{j} \times I_j 
+\end{equation} 
+
+\noindent where $I_j = 1$ if and only if the $j$th video is true relevant, otherwise $I_j = 0$ .  
 
 \begin{table}[!ht]
   \begin{center}
@@ -119,7 +133,7 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
     \caption{Means and standard deviations (percent) of MAPs over six events at different levels using SVM with different kernels.}
 \end{table}
 
-\noindent In the experiment shown in Table 9, each time three videos from each class were selected as training data while the rest of Kodak videos were used as testing videos. As a result, 18 videos were used to train models while the rest 177 videos acted as testing videos. Furthermore, SVM was trained in one-against-all manner, which trains in total 6 classifiers for all 6 events. This experiment was repeated for five times, and the mean and standard deviation of Mean Average Precision (MAP) for each method was recorded in Table 9. Given the fact that only around $9.23\% \; (\sfrac{18}{195})$ videos were used as training data, the performance reported in Table 9 was quite good. There are three observations based on results in Table 9. 
+\noindent In the experiment shown in Table 9, each time 3 videos from each class were randomly selected as training data while the rest of Kodak videos were used as testing videos. As a result, 18 videos were used to train models while the rest 177 videos acted as testing videos. Furthermore, SVM was trained in one-against-all manner, which trained in total 6 classifiers for 6 events. As a result, each classifier produced one AP, and the mean of these 6 APs (MAP) was recorded. This experiment was repeated for five times, and the mean and standard deviation of Mean Average Precision (MAP)  under each setting was recorded in Table 9. Given the fact that only around $9.23\% \; (\sfrac{18}{195})$ videos were used as training data, the performance reported in Table 9 was quite good. There are three observations based on results in Table 9. 
 \begin{enumerate}
   \item{\bf In this case, Level 0 performs better than both unaligned Level 1 and aligned Lavel 1 for all types of kernel} \\
   The most possible reason is due to a lack of training data. In latter experiments, when all youtube videos and randomly selected 18 Kodak videos were used for training, the performance ranking was: Level 1 (Aligned) $>$ Level 1 (Unaligned) $>$ Level 0. 
@@ -154,7 +168,13 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
     \caption{Means and standard deviations (percent) of MAPs over six events using different mechanisms to build histograms}
 \end{table}
 
-\noindent Experiments on building better BoW using different weighting schemes and soft assignment were also tried. Following the same setting of experiments in Table 9, the results of various approaches were recorded in Table 10. ``Easy soft'' represents the approach that the top $T$ neighbors are retrieved for each feature when building histograms. In this experiment, $T = 4$. ``Gaussian soft'' represents the approach which uses Gaussian Mixture Models to build histograms. For other approaches like ``txc'', please refer to Table 4 in the section of representations of videos. Based on results shown in Table 10, it is not easy to that ``tfc'' and ``Gaussian soft assignment'' performs relatively better than the rest approaches. Thus, histograms built through soft assignment and weighting schemes which consider global frequencies of visual words possess more discriminable power. \\
+\begin{figure}[!ht]
+\centering
+  \includegraphics[width=1\textwidth]{./tfc.png}
+\caption{Chart representation of MAPs using txx, tfc, Gaussian soft}
+\end{figure}
+
+\noindent Experiments on building better BoW using different weighting schemes and soft assignment were also tried. Following the same setting of experiments in Table 9, the results of various approaches were recorded in Table 10. ``Easy soft'' represents the approach that the top $T$ neighbors are retrieved for each feature when building histograms. In this experiment, $T = 4$. ``Gaussian soft'' represents the approach which uses Gaussian Mixture Models to build histograms. For other approaches like ``txc'', please refer to Table 4 in the section of representations of videos. Based on results shown in Table 10, it is not easy to distinguish that ``tfc'' and ``Gaussian soft assignment'' performs relatively better than the rest approaches. Thus, histograms built through soft assignment and weighting schemes which consider global frequencies of visual words poss more discriminable power. \\
 
 \begin{table}[!ht]
   \begin{center}
@@ -171,15 +191,17 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
     \end{tabular}
 
     \end{center}
-    \caption{Recognition accuracies (percent) using distances calculated on original Youtube videos and distances calculated on Youtube compressed videos.}
+    \caption{Means and standard deviations (percent) of MAPs over six events using distance matrix calculated on original Youtube videos and distance matrix calculated on Youtube compressed videos under different distributions of training and testing videos.}
 \end{table}
-\noindent The approach of identifying key frames in a cluster of images introduced in the section of image recognition was employed to compress Youtube videos. Originally, the total size of Youtube histograms in Python serialization file was 4.42 GB. After compressing, the size was reduced to 3.17 GB, which means around $28.41 \%$ frames were discarded. Then the level 0 distance matrix of compressed Youtube videos using Aligned Space-Time Pyramid Matching was calculated. In this experiment, SVM was trained in one-against-one manner to recognize multiple classes. The distance of original Youtube videos were used as a baseline to compare the performance of compressed videos. Table 11 depicts the recognition accuracies for these two distance matrices using different number of training videos. There are two observations based on Table 11.
+
+\noindent The approach of identifying key frames in a cluster of images introduced in the section of Image Recognition was employed to compress Youtube videos. Originally, the total size of Youtube histograms in form of Python serialization file was 4.42 GB. After compression, the size was reduced to 3.17 GB, which means around $28.41 \%$ frames were discarded. Then the level 0 distance matrix of compressed Youtube videos using Aligned Space-Time Pyramid Matching was calculated. This experiment followed previous experimental setting and still employed MAP as performance metric. Furthermore, the distance matrix of original Youtube videos were used as a baseline. Table 11 depicts means and standard deviations of MAPs for these two distance matrices using different number of training videos. There are two observations based on Table 11.
+
 \begin{enumerate}
   \item{\bf The performance of compressed videos is slightly worse than original videos} \\
-  Though compressed videos contain less redundant frames, the performance is still worse than original videos. The most possible explanation is that EMD always finds the best matches among frames. Thus, those redundant frames are actually ignored during the calculation of distances. As a result, it shows the effectiveness of EMD. 
+  Though compressed videos contain less redundant frames, the performance is still worse than original videos. The most possible explanation is that EMD always finds the best matches among frames. Thus, those redundant frames are actually ignored during the calculation of distances. As a result, the compressing step may not be so useful even though it accelerates the calculation of EMD distance because of smaller data size. This observation also further proves the effectiveness of EMD.
 
-  \item{\bf With more training samples, the recognition accuracy increases}
-  This is actually common sense. With more training samples, the found boundary is more likely to be near to the optimal bounday. However, the problem is there is normally no enough labelled samples. This is also the main reason why researchers are exploring domain adaptations. 
+  \item{\bf With more training samples, the performance becomes better} \\
+  This is actually common sense and easy to understand. With more training samples, the found boundary in the hyperplane is more likely to be near to the optimal boundary. Based on this observation, in order to build robust classifiers, one approach is to employ more training samples. However, the problem is there is normally no enough labelled samples, and it costs a lot to label new samples. This is also the main reason why researchers are exploring domain adaptations, in which labelled samples in other domains are leveraged. 
 \end{enumerate}
 
 \subsubsection{Performance of specialized GMM}
@@ -200,7 +222,7 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
     \end{center}
     \caption{Means and standard deviations (percent) of MAPs over six events using different GMMs}
 \end{table}
-\noindent Experiments using another representations of video clips are presented here. There are in total four different settings controlled by the type covariance and the dimension of SIFT feature. Two types of covariances were adopted in experiments: spherical and full. While spherical covariance assumes that the variations on all dimensions are the same, full covariance does not have such assumption. An example to demonstrate the differences of these two types of covariances is Figure 14, where spherical covariance builds Gaussian distributions in circle shape, and full covariance builds in ellipse. Also, the dimension of SIFT was reduced to 64 through PCA for experiments. \\ 
+\noindent Experiments using another representations of video clips are presented here. There are in total four different settings controlled by the type of covariance and the number of dimension in SIFT feature. Two types of covariances were adopted in these experiments: spherical and full. While spherical covariance assumes that the variations on all dimensions are the same, full covariance does not have such assumption. An example to demonstrate the differences of these two types of covariances is Figure 16, where spherical covariance builds Gaussian distributions in circle shape, and full covariance builds in ellipse. Rather than the original 128 dimensional SIFT, SIFT reduced to 64 dimensional feature through PCA was also tried in experiments. \\ 
 
 \begin{figure}[!ht]
 \centering
@@ -214,7 +236,7 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
   Except for Gaussian kernel, the performances of spherical covariance with 128 dimensional SIFT features were better than those of full covariance. The possible reason could be that the number of features was not enough to build good enough specialized GMM for most video clips when full covariance was adopted. 
 
   \item{\bf Spherical covariance using ID kernel performed the best}\\
-  Overall speaking, GMM representations of videos did not perform well compared with Bow representations. However, the best MAP achieved by spherical covariance using 128 dimensional feature reached $43.64 \%$, which is slightly worse than that achieved by level 0 distance using aligned space-time pyramid matching. This gives an insight that a right kernel type helps a lot to improve the performance. 
+  Overall speaking, GMM representations of videos did not perform well compared with BoW representations. However, the best MAP achieved by spherical covariance using 128 dimensional feature reached $43.64 \%$, which is slightly worse than that achieved by level 0 distance using aligned space-time pyramid matching. This gives an insight that an appropriate kernel function helps a lot to improve the performance. 
 \end{enumerate}
 
 
@@ -235,18 +257,21 @@ f^{Fuse} = \frac{1}{N} \sum_{i=1}^{N} \frac{1}{1 +\exp{(-f_i)}}
     \end{center}
     \caption{Means and standard deviations (percent) of recognition accuracies using concept attributes}
 \end{table}
-\noindent Concept attribute was also experimented. In this experiment, 2-layer SVM classification structure was implemented, where the first layer built up 6 concept detectors, and the second layer trained and tested videos using 6-dimensional vectors, in which each dimension represented the respective semantic concept like ``birthday'' and ``show''. The results were presented in Table 13. ``Kodak $\to$ Kodak'' represents the case where training samples in Kodak videos were used to train concept detectors, whereas ``Youtbe $\to$ Kodak'' represents the case where all Youtube videos were used to train concept detectors. The second stage SVM was implemented in one-against-one manner with Gaussian kernel. Baseline was implemented using the average kernel generated from 4 types of kernel matrix. Based on results recorded in Table 13, there are two observations.
+\noindent Concept attribute was also experimented. In this experiment, 2-layer SVM classification structure was implemented, where the first layer built up 6 concept detectors, and the second layer trained and tested videos using 6-dimensional vectors, in which each dimension represented the respective semantic concept like ``birthday'' and ``show''. The results were presented in Table 13. ``Kodak $\to$ Kodak'' represents the case where training samples in Kodak videos were used to train concept detectors, whereas ``Youtbe $\to$ Kodak'' represents the case where all Youtube videos were used to train concept detectors. The second stage SVM was implemented in one-against-one manner with Gaussian kernel. As for baseline, it was implemented using level 0 distance and only Kodak videos as training data through one-against-one SVM. \\ 
+
+\noindent Based on results recorded in Table 13, there are two observations.
 \begin{enumerate}
-  \item{\bf ``Youtbe $\to$ Kodak'' performed much worse than ``Kodak $\to$ Kodak''}\\ This result makes sense since Youtbe videos and Kodak videos come from two different domains. Therefore, their distributions are quite different. 
+  \item{\bf ``Youtbe $\to$ Kodak'' performed much worse than ``Kodak $\to$ Kodak''}\\ This result makes sense since Youtbe videos and Kodak videos come from two different domains. Due to the differences in distributions, the concept detectors built through Youtube videos may not be powerful enough to capture adequate discriminate power. 
 
   \item{\bf ``Kodak $\to$ Kodak'' was slightly worse than baseline}\\
-  This observation demonstrates the promising discriminable power of concept attribute. Though the representation of videos is reduced into 6-dimensional vectors, its performance is still comparable with that by basline. Actually, concept attribute could be implemented to perform better by adding more concepts. However, there was no enough training data. 
-
+  This observation demonstrates the promising discriminable power of concept attribute. Though the representation of videos is reduced into 6-dimensional vectors, its performance is still comparable with that achieved by baseline. Actually, concept attribute could be implemented to perform better by adding more concepts. However, there was no enough training data. 
 \end{enumerate}
 
 
 \subsubsection{Performance of domain adaptation methods}
-This subsection introduces the experiments on domain adaptation methods. There are in total four domain adaptations: Feature Replication (FR), Adaptive SVM (A-SVM), Domain Transfer SVM (DTSVM) and Adaptive Multiple Kernel Learning (A-MKL). The other three methods SVM\_T, SVM\_AT and MKL are used as baseline, where SVM\_T only relied on $\mathcal{D}_l^T$, and SVM\_AT relied on training samples from both $\mathcal{D}^T$ and $\mathcal{D}^A$, and MKL used the average of all kernel matrices. Therefore, except SVM\_T, all other 6 methods needed all Youtube videos as training data in $\mathcal{D}^A$. In Table 14, various distance matrices are listed which have been implemented. Once a distance matrix was given, 20 kernel matrices were built, where Gaussian, Laplacian, ISD and ID were employed by setting kernel parameter as $\gamma = 2^l \gamma_0$, and $l \in (-3, -2,\cdots, 1)$. Such setting was made to align with that stated in \cite{duan2012visual}. One special case was MAP(8) in which 2 different distance matrices were input. As a result, there were in total 40 base kernels for MAP(8) during the process of all these methods. As for the division of training samples and testing samples, each time the experiment randomly selected 3 videos from Kodak set as $\mathcal{D}_l^T$ while the left videos were treated as $\mathcal{D}_u^T$. All Youtube videos were used as full labelled set in $\mathcal{D}^A$ if needed. The results of repeating this experiment for five times were recorded in Table 15 as below.\\
+This subsection introduces the experiments on domain adaptation methods. There are in total four domain adaptations: Feature Replication (FR), Adaptive SVM (A-SVM), Domain Transfer SVM (DTSVM) and Adaptive Multiple Kernel Learning (A-MKL). The other three methods SVM\_T, SVM\_AT and MKL are used as baseline, where SVM\_T only relies on $\mathcal{D}_l^T$, and SVM\_AT relies on training samples from both $\mathcal{D}^T$ and $\mathcal{D}^A$, and MKL uses the average of all kernel matrices. Therefore, except SVM\_T, all other 6 methods needed all Youtube videos as training data in $\mathcal{D}^A$. In Table 14, various distance matrices are listed. It is worth mentioning the level 1 distances in categories MAP(2) and MAP(3). It has already been introduced that the calculation of level 1 distance is 64 times slower than that of calculating level 0 distance. It was estimated to cost around 20 days to compute level 1 distances between all 1101 videos on single machine, and this fact was not acceptable. In order to overcome this difficulty, multi-process was employed, and this method successfully decreased the cost to around 6 days. \\ 
+
+\noindent Once a distance matrix was given, 20 kernel matrices were built, where Gaussian, Laplacian, ISD and ID were employed by setting kernel parameter as $\gamma = 2^l \gamma_0$, and $l \in (-3, -2,\cdots, 1)$. Such setting was made to align with that stated in \cite{duan2012visual}. One special case was MAP(8) in which 2 different distance matrices were input. As a result, there were in total 40 base kernels for MAP(8) during the process of all these methods. As for the division of training samples and testing samples, each time the experiment randomly selected 3 videos from Kodak set as $\mathcal{D}_l^T$ while the left videos were treated as $\mathcal{D}_u^T$. All Youtube videos were used as full labelled set in $\mathcal{D}^A$ if needed. The results of repeating this experiment for five times were recorded in Table 15 as shown below.\\
 
 \begin{table}[!ht]
   \begin{center}
@@ -314,15 +339,70 @@ This subsection introduces the experiments on domain adaptation methods. There a
 \noindent Table 15 gives the means and standard deviations of MAPs over six events for all methods, and there are 4 observations.
 \begin{enumerate}
   \item{\bf In all cases, SVM\_AT performed better than SVM\_T}\\
-  This result is in expectation, and it demonstrates the limitation of classifiers built from limited training samples in $\mathcal{D}^T$. If there are more labelled samples from $\mathcal{D}^A$ used in training, the resulting classifiers are generally more robust. 
+  This result is achieved as expected, and it demonstrates the limitation of classifiers built from limited training samples in $\mathcal{D}^T$. If there are more labelled samples from $\mathcal{D}^A$ used in training, the resulting classifiers are generally more robust. 
 
-  \item{\bf Over almost all 7 methods from SVM\_T to A-MKL, the distance matrix calculating from histograms built by Gaussian soft assignment(MAP(6)) performed better than other 6 distance matrices from MAP(1) to MAP(5) and MAP(7)}\\
+  \item{\bf Among almost all 7 methods from SVM\_T to A-MKL, the distance matrix calculating from histograms built by Gaussian soft assignment(MAP(6)) performed better than other 6 distance matrices from MAP(1) to MAP(5) and MAP(7)}\\
   This statement is made without considering MAP(8) which used 2 kinds of distance matrices. This result strongly shows the robustness of histograms built through Gaussian soft assignment. During the process of building histograms through Gaussian soft assignment, more discriminable power is retained compared with other approaches. 
 
   \item{\bf A-MKL performed the best}\\
   MAP(8) achieved the best using A-MKL, where aligned Level one distance and distance from Gaussian soft assignment were used. A-MKL utilizes information from pre-learnt classifiers and reduces the mismatch between $\mathcal{D}^T$ and $\mathcal{D}^A$ by finding the optimal coefficients of multiple base kernels. Though there are at least $20\%$ noisy labels in Youtube videos as reported in \cite{duan2012visual}, A-MKL still learned a robust classifier and achieved the best. The best MAP $61.40\%$ is better than the results reported in \cite{duan2012visual}, and it demonstrates the effectiveness of selecting base kernels smartly. 
 
   \item{\bf DTSVM performed amazingly in MAP(7)}\\
-  In MAP(7), the distance matrix from specialized GMMs were used for experiments. Normally, its performance was less than $38\%$ indicating that many specialized GMMs were not well built. However, DTSVM helped to increase the performance from the lowest $32.91\%$ to $46.61\%$. This result strongly shows the importance of exploring the optimal coefficients for base kernels.
+  In MAP(7), the distance matrix from specialized GMMs were used for experiments. Normally, its performance was less than $38\%$ indicating that many specialized GMMs were not well built. However, DTSVM helped to increase the performance from the lowest $32.91\%$ to $46.61\%$. This result strongly shows the importance of exploring the optimal coefficients of base kernels.
+
+\end{enumerate}
+
+
+\begin{table}[!ht]
+  \begin{center}
+  \scalebox{0.8}{
+    \begin{tabular} {cccccccc}
+    \hline
+    \head{} &\head{SVM\textunderscore T} &\head{SVM\textunderscore AT} &\head{FR} &\head{A-SVM} &\head{MKL} &\head{DTSVM} &\head{A-MKL} \\
+    \hline
+    one-vs-all & $49.94 \pm 6.96 $ & $ 57.85\pm 1.91$ & $57.18\pm8.59$ & $ 48.25\pm8.43$ & $ 58.53\pm2.36$ & $ 55.82\pm0.83$ & $ \mathbf{58.87 \pm 0.90}$ \\
+    
+    one-vs-one & $ 33.67\pm 14.67$ & $ 51.64\pm 0.45 $ & $57.18 \pm 6.21$ & $36.05 \pm 12.62$ & $49.94\pm1.05$ & $50.85\pm0.80$ & $ 55.14\pm 2.10$ \\
+    \hline
+    \end{tabular}
+    }
+    \end{center}
+    \caption{Means and standard deviations (percent) of average recognition accuracies over six events for all methods using different SVM multi-class schemes}
+\end{table}
+
+\begin{figure}[!ht]
+\centering
+  \includegraphics[scale = 0.5]{./onevsone.png}
+\caption{Chart representation of Table 16}
+\end{figure}
+
+
+
+\begin{table}[!ht]
+  \begin{center}
+  \scalebox{0.8}{
+    \begin{tabular} {cccccccc}
+    \hline
+    \head{} &\head{SVM\textunderscore T} &\head{SVM\textunderscore AT} &\head{FR} &\head{A-SVM} &\head{MKL} &\head{DTSVM} &\head{A-MKL} \\
+    \hline
+    one-vs-all & $0.98$ & $8.54$ & $10.53$ & $12.52$ & $8.71$ & $11.33$ & $27.87$ \\
+    
+    one-vs-one & $1.49$ & $4.08$ & $5.68$ & $7.16$ & $3.44$ & $5.05$ & $10.94$\\
+    \hline
+    \end{tabular}
+    }
+    \end{center}
+    \caption{Average running time (seconds) for all methods using different SVM multi-class schemes}
+\end{table}
+
+\noindent In previous experiments, MAP acted as the performance metric. However, in real applications, the classifier is expected to output labels rather than scores. Based on these predictions, the recognition accuracies of classifiers could be easily calculated. In the experiments shown in Table 16 and 17, recognition accuracy acts as the performance metric. There are generally two approaches to enable SVM to perform multi-class classification: one-vs-one and one-vs-all. For one-vs-one, if there are $n$ classes, $n * (n - 1) / 2$ classifiers are built by taking training data from any two classes. For instance, there are in total 6 classes. Thus, 15 classifiers are built because of 15 unique combinations. Finally, the prediction for each sample is chosen to be the class with the highest vote. On the contrary, one-vs-all only trains $n$ classifiers if there are $n$ classes. For each classifier on each class, the training data is formed by taking the current class as positive class while the rest of classes are treated as negative class. For instance, in this experiment, the training data for ``birthday or non-birthday'' classifier is constructed by taking all ``birthday'' samples as positive samples while the rest samples as negative samples. Finally, the prediction of each testing sample is chosen to be the class with the highest SVM score. In this experiment, these two different multi-class SVMs were implemented. Following the same settings as before, the experiment was repeated for five times, and the accuracies and average running time are recorded in Table 16 and Table 17 respectively. \\ 
+
+\noindent According to these two tables, there are two observations. 
+\begin{enumerate}
+  \item{\bf In this case, one-vs-all constantly performed better than one-vs-one} \\
+  The possible reason may be a lack of training samples for one-vs-one. When building classifiers in one-vs-one manner, the training samples are divided based on different class combinations. However, for one-vs-all, the training samples are the whole available training samples. Moreover, as expected, A-MKL performed the best. 
+
+  \item{\bf In this case, one-vs-all required more running time compared with one-vs-one} \\
+  Again, since one-vs-all deals with more training samples, it costs more time to build classifiers. Also, it is worth noting that A-MKL took $27.87$ seconds to finish the prediction task. However, compared with SVM\textunderscore AT, the performance was only increased by $1.02 \%$. There is a trade-off between accuracy and running time. Thus, it depends on the system requirements to choose which implementation. 
 
 \end{enumerate}

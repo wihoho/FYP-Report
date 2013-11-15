@@ -1,11 +1,11 @@
-\section {Image recognition}
+\section {Image Recognition}
 Image recognition is a very interesting topic in computer vision and pattern recognition, and the goal is to recognize different classes in images. For instance, there are trees, people, sun, moon and buildings in different images. Human can easily distinguish different classes among a set of images. However, machines are not good at such tasks. For many years, a lot of researchers are working on this topic and have achieved significant results.\\
 
 \noindent So far, a very good framework to recognize images is the so-called {\em bag of words} model, which generalizes from natural language processing (NLP). In NLP, bag of words basically aims to represent an article using histogram of word frequencies. Following this idea, in image recognition, an image is also represented as a histogram of visual words, and these visual words normally come from centroids generated from clustering algorithms. Later on, such representations of images are used to build up generic machine learning models, and the accuracy is quite impressive. During recognition phase, the most critical process is to calculate image-to-image distance. One direct way is the Euclidean distance. But a better way to calculate distance is called as Earth Mover's Distance \cite{rubner2000earth}, which finds the best matches between image parts and produces a more accurate distance. \\
 
 \noindent In the following of this section, an image recognition framework consisting of 4 steps is first introduced. Secondly, Earth Mover's distance and its applications in image recognition is talked about. Lastly, the method to identify duplicates in a cluster of images used in this project are presented, and this method is going to be applied in video recognition to show the effectiveness of Earth Mover's distance.
 
-\subsection{Framework description}
+\subsection{Framework Description}
 
 Generally, there are 4 below steps to go:
 
@@ -28,7 +28,7 @@ D(x, y, \sigma) = (G(x, y, k\sigma) - G(x, y, \sigma)) * I(x, y)
 \noindent For simplicity, an open source library VLFEAT \cite{vedaldi08vlfeat} is adopted to extract SIFT from images. A typical image of size $200 \times 200$ normally produces around 800 SIFT features.  
 
 \subsubsection{Build up visual vocabulary from features of training set}
-Although SIFT features have been extracted, these 128 dimensional raw features are still not an ideal representation because of causes including the curse of dimensionality. Thus, a visual vocabulary is needed to map high dimensional descriptors to words by quantizing the feature space. Commonly, vocabulary is built through applying K-Means \cite{lloyd1982least} clustering algorithm on available features, and the final centroids output by K-Means are treated as representative words. The basic K-means algorithm goes as below:
+Although SIFT features have been extracted, these 128 dimensional raw features are still not an ideal representation because of limitations including the curse of dimensionality. Thus, a visual vocabulary is needed to map high dimensional descriptors to words by quantizing the feature space. Commonly, vocabulary is built through applying K-Means \cite{lloyd1982least} clustering algorithm on available features, and the final centroids output by K-Means are treated as representative words. The basic K-means algorithm goes as below:
 
 \begin{algorithm}
   \caption{Basic K-means Algorithm}
@@ -154,7 +154,7 @@ In machine learning, classification refers to the problem of identifying to whic
   \begin{equation}
   f(x) = \text{sign}\bigg(\sum_i y_i \alpha_i K(x_i,x) + b\bigg)
   \end{equation}
-  As shown above, thanks to the kernel function $K(x_i, x_j)$, nonlinear classification is achieved without projecting data points into higher dimensional space. This clever trick refers to ``kernel trick''. Interested readers could refer to \cite{burges1998tutorial} for more details. \\
+  As shown above, thanks to the kernel function $K(x_i, x_j)$, nonlinear classification is achieved without projecting data points into higher dimensional space. This clever trick refers to ``kernel trick''. Detailed information can be found at \cite{burges1998tutorial}. \\
 
   \noindent There are many kernels designed over years, and different kernels have different impacts on recognition performances. In experiments of image recognition, the below four kernel functions have been implemented.
   
@@ -177,18 +177,18 @@ In machine learning, classification refers to the problem of identifying to whic
         \caption{Kernel functions}
     \end{table}
 
-  \noindent Although the above mathematical description of support vector machine seems to be complex, there are lots of open source libraries of SVM. One famous and popular package is LIBSVM \cite{CC01a}. What's better is that sklearn \cite{scikit-learn} provides well defined python wrapper to invoke LIBSVM. All these help to ease the use of SVM, and it demonstrates the collaboration among researchers all around the world.
+  \noindent Although the above mathematical description of support vector machine seems to be complex, there are lots of open source libraries of SVM. One famous and popular package is LIBSVM \cite{CC01a}. What's better is that sklearn \cite{scikit-learn} provides well defined python wrapper to invoke LIBSVM. All the work facilitates the use of SVM, and it demonstrates the collaboration among researchers all around the world.
 
-\subsection{Earth mover's distance (EMD)}
+\subsection{Earth Mover's Distance (EMD)}
 In this subsection, Earth mover' distance will be introduced, and the reason is because later on in video recognition, this kind of distance calculation is going to be heavily used. The rest of this section is organized as follows. Firstly, the mathematical model of earth mover proposed by Rubner, Tomasi and Guibas \cite{rubner2000earth} is presented followed by an example of calculating earth mover distance between two images. Last but not least, experiments have been done to show the effectiveness of EMD, and the result is recorded in the section of experiments.\\
 
-\noindent The earth mover's distance is formulated as the following linear programming problem: Let $P = \{(p_1, w_{p1} ), . . . , (p_m , w_{pm} )\}$ be the first signature with $m$ clusters, where $p_i$ is the cluster representative and $w_{pi}$ is the weight of the cluster; $Q=\{(q1,w_{q1}),...,(qn,w_{qn})\}$ the second signature with $n$ clusters; and $D = [d_{ij}]$ the ground distance matrix where $d_{ij}$ is the ground distance between clusters $p_i$ and $q_j$. We want to find a flow $F = [f_{ij}]$, with $f_{ij}$ being the flow between $p_i$ and $q_j$, that minimizes the overall cost: 
+\noindent The earth mover's distance is formulated as the following linear programming problem: Let $P = \{(p_1, w_{p_1} ), . . . , (p_m , w_{p_m} )\}$ be the first signature with $m$ clusters, where $p_i$ is the cluster representative and $w_{pi}$ is the weight of the cluster; $Q=\{(q_1,w_{q_1}),...,(q_n,w_{q_n})\}$ the second signature with $n$ clusters; and $D = [d_{ij}]$ the ground distance matrix where $d_{ij}$ is the ground distance between clusters $p_i$ and $q_j$. We want to find a flow $F = [f_{ij}]$, with $f_{ij}$ being the flow between $p_i$ and $q_j$, that minimizes the overall cost: 
 \begin{eqnarray}
 \text{minimize} & Work(P , Q, F) = \sum_{i=1}^{m}\sum_{j=1}^{n}d_{ij}f_{ij} \nonumber\\
 \text{subjective to } & f_{ij} \geq 0 \quad \quad 1 \leq i \leq m,  1 \leq j \leq n \nonumber\\ 
-& \sum_{j=1}^n f_{ij} \leq w_{pi} \quad 1 \leq i \leq m \nonumber\\
-& \sum_{i=1}^m f_{ij} \leq w_{qj} \quad 1 \leq j \leq n \nonumber\\
-& \sum_{i=1}^{m} \sum_{j=1}^n f_{ij} = min(\sum_{i=1}^m w_{pi}, \sum_{j=1}^n w_{qj}) 
+& \sum_{j=1}^n f_{ij} \leq w_{p_i} \quad 1 \leq i \leq m \nonumber\\
+& \sum_{i=1}^m f_{ij} \leq w_{q_j} \quad 1 \leq j \leq n \nonumber\\
+& \sum_{i=1}^{m} \sum_{j=1}^n f_{ij} = min(\sum_{i=1}^m w_{p_i}, \sum_{j=1}^n w_{q_j}) 
 \end{eqnarray}
 
 \noindent Once the above linear programming problem is solved, the earth mover's distance is defined as the resulting work normalized by the total flow:
@@ -245,7 +245,7 @@ where $a_0, a_1, a_2, a_3$ and $b_0, b_1, b_2, b_3$ are histograms generated fro
       \head{Kernel type} & \head{Kernel function}\\
       \hline
       Gaussian & $\exp(-\gamma D^2(I_i, I_j)$ \\
-      Laplacian & $\exp(-\gamma D(I_i, I_j)$ \\
+      Laplacian & $\exp(- \sqrt{\gamma} D(I_i, I_j)$ \\
       ISD & $\frac{1}{\gamma D^2(I_i, I_j) + 1}$ \\
       ID & $\frac{1}{\sqrt{\gamma}D(I_i, I_j) + 1}$\\
       \hline
@@ -254,7 +254,7 @@ where $a_0, a_1, a_2, a_3$ and $b_0, b_1, b_2, b_3$ are histograms generated fro
     \caption{Four kernel types which have been tested. $D(I_i, I_j)$ represents the distance between $I_i$ and $I_j$. The kernel parameter $\gamma$ is selected to be the default one $\gamma = \frac{1}{A}$, where $A$ is the mean value of the squared distances between training samples as suggested in \cite{laptev2008learning}.} 
 \end{table}
 
-\subsection {Key frame identification in a cluster of images}
+\subsection {Key Frame Identification in a Cluster of Images}
 A video could be simplified as a cluster of consecutive frames. By noticing that some consecutive frames in video are similar to each other, it is thought that video can be described by several key frames. In doing so, the data to represent each video can thus be largely reduced. One key step in key frame identification is to check whether two images are near duplicate. If two or more images are examined to be near duplicate to each other, only one image will be selected to represent these images. The rest of this section will focus on two parts: near duplicate identification and how to apply near duplicate identification into key frame identification in videos.
 
 \subsubsection{Identifying near duplicate}

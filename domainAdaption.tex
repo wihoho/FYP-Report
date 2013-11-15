@@ -1,4 +1,4 @@
-\section{Domain adaptation}
+\section{Domain Adaptation}
 \subsection{Overview}
 So far, all approaches introduced are based on an assumption tha both training data and testing data in recognition come from the same domain, namely, training data and testing data have the same or similar distribution. It works fine if there are enough lablled training data to build up a robust classifier. However, in real world, the most costing and time-consuming process is to label samples and build up training data. At the same time, because of some reasons, there are lots of labelled samples from other domains. For example, here is a task to recognize images from Instagram, and only few images are labelled. With such a small portion of labelled images, it is difficult to build a robust classifier. However, there are thousands of labelled images which could be retrieved through search engines like Google and Bing. Once certain keywords are input to the search engines, lots of relevant images will appear, and the keywords could be used as labels of these retrieved images. Due to the differences in distribution, classifiers built from other domains work poorly in the current domain. But is it possible to utilize these labelled samples from other domains to boost the performance of classifier in the current domain? To address this problem, many domain adaptation methods \cite{daume2007frustratingly, yang2007cross, duan2009domain, duan2012visual}, which utilizes training data from other domains, have been proposed for different proposes, and these methods have been proved to be effective to build robust classifiers with few labelled samples from the target domain. \\
 
@@ -11,7 +11,7 @@ So far, all approaches introduced are based on an assumption tha both training d
 
 \noindent As shown in Figure 12, training data and testing data are supposed to come from the same domain in traditional machine learning. In contrast, domain adaptation also utilizes data samples from other domains. Following the terminology from literatures, the target domain, from which the test samples are, is defined as $\mathcal{D}^T$. The other domain, which provides enough labelled data, is defined as auxiliary domain $\mathcal{D}^A$. Moreover, $\mathcal{D}^T = \mathcal{D}_l^T \cup \mathcal{D}_u^T$, where $\mathcal{D}_l^T$ represents limited labelled data, and $\mathcal{D}_u^T$ represents unlabelled data. Also, the auxiliary data set $\mathcal{D}^A = \{(x_i^A, y_i^A)\}_{i=1}^{n_A}$, which is a fully labelled data set. In the rest of this section, domain adaptation methods including Feature Replication \cite{daume2007frustratingly}, Adaptive SVM \cite{yang2007cross}, Domain Transfer SVM \cite{duan2009domain} and Adaptive Multiple Kernel Learning \cite{duan2012visual} are introduced. Experimental results and analysis of these methods are presented in the section of experiments.
 
-\subsection{Feature replication (FR)}
+\subsection{Feature Replication (FR)}
 Feature replication \cite{daume2007frustratingly} uses augmenting features to perform SVM training. There are two different mapping functions to augment samples $\{x\}$ from different domains. 
 \begin{equation}
 \Phi^T(\mathbf{x}) = (\mathbf{x},\mathbf{x},\mathbf{0}), \quad  \Phi^A(\mathbf{x}) = (\mathbf{x},\mathbf{0}, \mathbf{x})
@@ -42,7 +42,7 @@ where $\Phi_{\theta}^T(x)$ represents $x$ from $\mathcal{D}^T$ in higher dimensi
 \]
 \noindent Based on equations (30) and (31), considering the kernel as a measure of ``similarity'', samples from the same domain are twice as similar as those come from different domains. In order words, for a test sample, those training samples from the same domain  are going to be more influential. Furthermore, the implementation is rather easy since the only operation needed is to twice the kernels of samples from the same domain. 
 
-\subsection{Adaptive support vector machine (A-SVM)}
+\subsection{Adaptive Support Vector Machine (A-SVM)}
 Adaptive SVM \cite{yang2007cross} incorporates multiple auxiliary classifiers $f_1^A(x), \cdots, f_M^A(x)$ built from $\mathcal{D}^A$ into the standard structure of SVM. The decision function of adapted classifier is defined as
 \begin{equation}
 f(x) = \sum_{k=1}^M t_k f_{k}^A(x) + \Delta f(x)
@@ -61,7 +61,7 @@ where $\Delta f(x) = w^T \phi(x)$ is called as a {\em permutation function} whic
 f(x) = \sum_{k=1}^M t_k f_{k}^A(x) + \sum_i \hat \alpha_i y_i K(x_i, x)
 \end{equation}
 
-\subsection{Domain transfer support vector machine (DTSVM)}
+\subsection{Domain Transfer Support Vector Machine (DTSVM)}
 It has been emphasized that the distributions of $\mathcal{D}^T$ and $\mathcal{D}^A$ are different. Therefore, when these two sets of data are projected into higher dimensional space, their distributions are still distant to each other. If there is a way to reduce the mismatch between $\mathcal{D}^T$ and $\mathcal{D}^A$, then those lablled samples from $\mathcal{D}^A$ could be treated as samples in the target domain to some extent, and of course this is going to improve the performance of recognition because more useful training samples are input to build a robust classifier. Given the fact that fusing multiple kernels helps to increase the performance, Duan et al. \cite{duan2009domain} proposed Domain Transfer SVM (DTSVM) to reduce the mismatch between $\mathcal{D}^T$ and $\mathcal{D}^A$ through calculating the optimal weight of each kernel. Also, the respective classifier is learnt simultaneously. \\
 
 \noindent The mismatch measured by Maximum Mean Discrepancy (MMD) \cite{borgwardt2006integrating} is defined as follows
@@ -105,13 +105,13 @@ To solve the optimization problem, the author \cite{duan2009domain} employed the
 	\begin{equation}
 	\mathbf{d}_{t+1} = (1 - \eta_t) \mathbf{d}_{t} + \eta_t \mathbf{d}_t^{new}
 	\end{equation}
-	where $\mathbf{d}_t^{new} = \theta(\mathbf{h h^T} + \varepsilon \mathbf{I_M})^{-1} \mathbf{q}$, and $\varepsilon \mathbf{I_M}^{-1}$ is added to avoid numerical instability with $\varepsilon = 10^{-5}$, and $\mathbf{q} = [\frac{1}{2}(\boldsymbol{\alpha}_t \diamond \mathbf{y})^T \mathbf{K}_1 (\boldsymbol{\alpha}_t \diamond \mathbf{y}), \cdots, \frac{1}{2}(\boldsymbol{\alpha}_t \diamond \mathbf{y})^T \mathbf{K}_M (\boldsymbol{\alpha}_t \diamond \mathbf{y})]$, and $\eta_t$ is the learning rate. Please note the symbol $\diamond$ represents the element-wise product of two vectors. For formal mathematical induction, please refer to \cite{duan2009domain,duan2012visual} for details, and a formal and concise algorithm description is presented in \cite{duan2012visual}. 
+	where $\mathbf{d}_t^{new} = \theta(\mathbf{h h^T} + \varepsilon \mathbf{I_M})^{-1} \mathbf{q}$, and $\varepsilon \mathbf{I_M}$ is added to avoid numerical instability with $\varepsilon = 10^{-5}$, and $\mathbf{q} = [\frac{1}{2}(\boldsymbol{\alpha}_t \diamond \mathbf{y})^T \mathbf{K}_1 (\boldsymbol{\alpha}_t \diamond \mathbf{y}), \cdots, \frac{1}{2}(\boldsymbol{\alpha}_t \diamond \mathbf{y})^T \mathbf{K}_M (\boldsymbol{\alpha}_t \diamond \mathbf{y})]$, and $\eta_t$ is the learning rate. Please note the symbol $\diamond$ represents the element-wise product of two vectors. For formal mathematical induction, please refer to \cite{duan2009domain,duan2012visual} for details, and a formal and concise algorithm description is presented in \cite{duan2012visual}. 
 \end{enumerate}
 
 \noindent The above two steps are repeated until convergence or the maximum number of iteration allowed is reached. At the end of this algorithm, the optimal $\mathbf{d}$ is learned as well as the optimal SVM model.
 
 \noindent 
-\subsection{Adaptive multiple kernel learning (A-MKL)}
+\subsection{Adaptive Multiple Kernel Learning (A-MKL)}
 Inspired by adaptive SVM (A-SVM) \cite{yang2007cross} and domain transfer SVM (DTSVM) \cite{duan2009domain}, the authors of DTSVM creatively combined these two approaches and proposed adaptive multiple kernel learning (A-MKL) \cite{duan2012visual}.  A-MKL takes the advantage of pre-learnt classifiers built either from $\mathcal{D}^A$ or $\mathcal{D}^A \cup \mathcal{D}^T$ and defines the decision function as
 \begin{equation}
 f^T(x) = \sum_{p=1}^{P} \beta_p f_p(x) + \sum_{m=1}^{M} d_m w_m^T \varphi_m(x) + b 
