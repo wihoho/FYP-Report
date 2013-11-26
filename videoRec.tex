@@ -86,22 +86,26 @@ As introduced in the section of image recognition, recognition tasks could be si
 	\paragraph{Global GMM built from training data} 
 	Once all SIFT features of training data are loaded into memory, K-means clustering algorithm is applied on this bag of SIFT features to initialize $K$ centroids, where $K$ is a predefined number determining the number of Gaussian components of the global GMM. Afterward, the standard Expectation-Maximization (EM) is applied to obtain the global GMM. \\
 
-	\noindent Suppose $X = \{x_1, \cdots, x_n\}$ are SIFT features extracted from training data, and $W = \{w_1, \cdots, w_K\}$ are the weights of respective Gaussian component. In E-step, the responsibilities of each SIFT feature to each Gaussian mixture component shall be computed. The below formula depicts the responsibility of $x_i$ to component $k$.
+	\noindent Suppose $X = \{x_1, \cdots, x_n\}$ are SIFT features extracted from training data, and $W = \{w_1, \cdots, w_K\}$ are the weights of respective Gaussian component. In E-step, the responsibilities of each SIFT feature to each Gaussian mixture component shall be computed. The below formula depicts the responsibility of $x_i$ to Gaussian component $k$.
 	\begin{equation}
 	Pr(k|x_i) = \frac{w_k \cdot \mathcal{N} (x_i ; \mu_k, \Sigma_k) }{\sum_{j=1}^{K}w_j \mathcal{N}(x_i ; \mu_j, \Sigma_j)}
 	\end{equation}   
 
+	\begin{equation}
+	n_k = \sum_{i=1}^{n} Pr(k|x_i)
+	\end{equation}
+
 	\noindent In M-step, parameters of each Gaussian component are updated.
 	\begin{equation}
-	w_k = \frac{\sum_{j=1}^{n} Pr(k|x_j)}{n}
+	w_k = \frac{n_k}{n}
 	\end{equation}
 
 	\begin{equation}
-	\mu_k = \sum_{j=1}^{n} \big( x_j \cdot \frac{Pr(k|x_j)}{\sum_{l=1}^{K} Pr(l|x_j)} \big)
+	\mu_k = \sum_{j=1}^{n} \big( x_j \cdot \frac{Pr(k|x_j)}{n_k} \big)
 	\end{equation}
 
 	\begin{equation}
-	\Sigma_k = \sum_{j=1}^{n} \big(  (x_j - \mu_k)(x_j - \mu_k)^T \cdot \frac{Pr(k|x_j)}{\sum_{l=1}^{K} Pr(l|x_j)} \big)
+	\Sigma_k = \sum_{j=1}^{n} \big(  (x_j - \mu_k)(x_j - \mu_k)^T \cdot \frac{Pr(k|x_j)}{n_k} \big)
 	\end{equation}
 
 	\noindent The above E-step and M-step are repeated until convergence, and the resulting distribution of $X$ is modeled by Gaussian mixture models as 
@@ -130,7 +134,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 	\hat\mu_k = \alpha_k E_k(z) + (1 - \alpha_k) \mu_k
 	\end{equation}
 
-	\noindent where $\alpha_k = \sfrac{n_k}{(n_k + r)}$, and $r$ is adjusted empirically depending $H$, the total number of SIFT features for each video clip.\\
+	\noindent where $\alpha_k = \sfrac{n_k}{(n_k + r)}$, and $r$ is adjusted empirically depending on $H$, the total number of SIFT features for each video clip.\\
 
 	\noindent The E-step and M-step are repeated until convergence. In the end, specialized GMM is modeled as $\hat\theta = \{\hat\mu_1, \cdots, \hat\mu_K \}$. It is worthy noting that all video clips are thus converted into equal size vectors if $\hat\theta$ is treated as a vector.
 
