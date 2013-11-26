@@ -53,7 +53,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 		\begin{equation}
 		idf(t_i) = \log(N / n_i)
 		\end{equation}
-		where $N$ is the total number of images in the corpus, and $n_i$ is the number of images having visual word $t_i$. According to this formula, the more frequent a visual word is, the smaller $idf$ is. Therefore, if $tf_i \cdot idf_i$ is used to replace $tf_i$, the weights of words which occur frequently are diminished while the weights of words which occur rarely are increased. Another factor is whether to normalize the vector or not. By taking all these factors into consideration, different weighting schemes are summarized in the below Table 1. Experimental results of these weighting schemes are demonstrated in the section of experiments.
+		where $N$ is the total number of images in the corpus, and $n_i$ is the number of images having visual word $t_i$. According to this formula, the more frequent a visual word is, the smaller $idf$ is. Therefore, if $tf_i \cdot idf_i$ is used to replace $tf_i$, the weights of words which occur frequently are diminished while the weights of words which occur rarely are increased. Another factor is whether to normalize the vector or not. By taking all these factors into consideration, different weighting schemes are summarized in the below Table 4. Experimental results of these weighting schemes are demonstrated in the section of experiments.
 
 		\begin{table}[!ht]
         \begin{center}
