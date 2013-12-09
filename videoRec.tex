@@ -167,7 +167,7 @@ As introduced in the section of image recognition, recognition tasks could be si
 	\caption{Illustration of Aligned Space-Time Pyramid Matching at level one \cite{duan2012visual}. (a) Each video clip is divided into 8 sub videos. (b) Matched sub videos are painted in the same color.}
 	\end{figure}
 
-	\noindent Compared with level zero distance, the calculation of higher level distances require one more matching stage due to the increasing volumes in videos. Let's say 2 videos $P$ and $Q$ are divided into $8^l$ nonoverlapped space-time volumes at level $l$, and they are represented as
+	\noindent Compared with level zero distance, the calculation of higher level distances require one more matching stage due to the increasing volumes in videos. Let's say 2 videos $P$ and $Q$ are divided into $8^l$ non-overlapped space-time volumes at level $l$, and they are represented as
 	$$P = (p_1, \cdots, p_R)$$
 	$$Q = (q_1, \cdots, q_R)$$
 	where $p_i$, $q_j$ are divided space-time volumes and $R$ equals to $8^l$. There are two matching stages to calculate distance between $P$ and $Q$ at level $l$. The first one is to calculate pairwise distance matrix $D$, where $D_{ij}$ is the EMD distance between $p_i$ and $q_j$. As a result, the shape of $D$ is $R^2$ because there are in total $R^2$ matches between space-time volumes of $P$ and $Q$. The additional stage is to align these pairwise distances. After solving the below linear programming problem using integer-flow EMD, those space-time volumes in $P$ and $Q$ are explicitly aligned. 

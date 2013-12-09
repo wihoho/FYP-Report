@@ -107,8 +107,8 @@ In machine learning, classification refers to the problem of identifying to whic
 
   \noindent SVM starts with the problem of finding the optimal separating hyperplane which separates a linearly separable dataset: $${(x_{1}, y_{1}), (x_{2}, y_{2}), ..., (x_{n}, y_{n})}$$ where $x \in R^{D}$ and $y \in  \{ -1, +1 \}$. An example is presented in Figure 4. Black solid circle represents one class while the while circle represents another class. The solid line $\mathbf{w} \mathbf{x} + b = 0$ is the optimal hyperplane, and the data points on $\mathbf{w} \mathbf{x} + b = 1$ and $\mathbf{w} \mathbf{x} + b = -1$ are called are {\em support vectors}. It is not difficult to see that the distances from support vectors to optimal hyperplane  are maximized. Therefore, the finding of optimal hyperplane is transformed into an optimization problem:
   \begin{eqnarray}
-  & \text{minimize} \quad J(w) = \frac{1}{2} \norm{w}^2 \nonumber \\
-  & \text{subject to} \quad y_i (w^{T} x_i + b) \ge 1 \quad \forall i
+  & \text{minimize} \quad J(\mathbf{w}) = \frac{1}{2} \norm{\mathbf{w}}^2 \nonumber \\
+  & \text{subject to} \quad y_i (\mathbf{w}^{T} x_i + b) \ge 1 \quad \forall i
   \end{eqnarray}
   
   \begin{figure}[!ht]

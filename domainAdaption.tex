@@ -66,7 +66,7 @@ It has been emphasized that the distributions of $\mathcal{D}^T$ and $\mathcal{D
 
 \noindent The mismatch measured by Maximum Mean Discrepancy (MMD) \cite{borgwardt2006integrating} is defined as follows
 \begin{equation}
-DIST_k(\mathcal{D}^A, \mathcal{D}^T) = \norm{\frac{1}{n_A} \sum_{i=1}^{n_A} \varphi(x_i^A) - \frac{1}{n_T} \sum_{i=1}^{n_T} \varphi{x_i^T}}
+DIST_k(\mathcal{D}^A, \mathcal{D}^T) = \norm{\frac{1}{n_A} \sum_{i=1}^{n_A} \varphi(x_i^A) - \frac{1}{n_T} \sum_{i=1}^{n_T} \varphi (x_i^T)}
 \end{equation}
 where $x_i^A$ and $x_i^T$ are samples from the auxiliary and target domains, respectively, and $\varphi(x)$ is a mapping function which projects $x$ into higher dimensional space. Given this mapping function, the kernel between $x_i$
  and $x_j$ is $k(x_i, x_j) = \varphi (x_i)^T \cdot \varphi (x_j)$. To simplify equation (37), a column vector $\mathbf{s}$, in which the first $n_A$ entries are $\frac{1}{n_A}$ while the remaining $n_T$ entries are $-\frac{1}{n_T}$, is used. Now the square of MMD in equation (37) is simplified as 
@@ -83,7 +83,7 @@ where $d_m$ is the coefficient of $k_m$ with constraints $d_m \geq 0$ and $\sum_
 \begin{equation}
 f^T(x) = \sum_{m=1}^{M} d_m w_m^T \varphi_m(x) + b 
 \end{equation}
-where $f^T(x)$ is the permutation function built by $\mathcal{D}_l^T$ based on base kernels with $b$ as the bias term. As a result, once the optimal coefficients $\mathbf{d}=[d_1, \cdots, d_M]^T$ are found through the process of reducing mismatches between $\mathcal{D}^T$ and $\mathcal{D}^A$, this decision function will be easily defined. After incorporating equation (39) into (38), the square of MMD is defined as a function of $\mathbf{d}$.
+As a result, once the optimal coefficients $\mathbf{d}=[d_1, \cdots, d_M]^T$ are found through the process of reducing mismatches between $\mathcal{D}^T$ and $\mathcal{D}^A$, this decision function will be easily defined. After incorporating equation (39) into (38), the square of MMD is defined as a function of $\mathbf{d}$.
 \begin{equation}
 DIST_k^2(\mathcal{D}^A, \mathcal{D}^T) = \Omega(\mathbf{d}) = \mathbf{h^T d}
 \end{equation}
