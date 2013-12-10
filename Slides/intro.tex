@@ -1,0 +1,36 @@
+\section{Introduction}
+\begin{frame}{Introduction}
+\begin{itemize}
+	\item Goal - \tikz[baseline]{\node[fill=blue!20,anchor=base] (t1) {recognize various videos};} based on \tikz[baseline]{\node[fill=red!20,anchor=base] (t2) {their content};}
+\end{itemize}
+
+\vspace{3mm}
+
+\begin{columns}
+	\column{0.5\textwidth}
+
+		\begin{itemize}
+			\item Youtube \tikz[na] \node[coordinate] (n1) {}; statistics
+				\begin{itemize}
+					\item 100 hours of videos are uploaded every minute
+					\item Over 6 billion hours of video are watched each month
+				\end{itemize}
+
+			\item Vine and Instagram
+		\end{itemize}
+
+	
+	\column{0.5\textwidth}
+		\begin{itemize}
+			\item Currently, video \tikz[na] \node[coordinate] (n2) {}; search is heavily relying on texts associated with videos
+			\item Explore other approaches to index and retrieve videos
+		\end{itemize}
+\end{columns}
+
+\begin{tikzpicture}[overlay]
+	\draw[line width = 2pt, blue, ->] (t1) -- ($(n1.north)+(0, 0.3)$);
+	\draw[line width = 2pt, red, ->] (t2) -- ($(n2.north)+(0, 0.3)$);
+\end{tikzpicture}
+
+
+\end{frame}

@@ -1,0 +1,128 @@
+\documentclass{beamer}
+\usepackage{tikz} 
+\usetikzlibrary{calc} 
+\usetikzlibrary{matrix}
+
+% Setup appearance:
+
+\usetheme{AnnArbor}
+\usecolortheme{beaver}
+\usetikzlibrary{arrows,shapes}
+\providecommand{\norm}[1]{\lVert #1 \rVert}
+\tikzstyle{na} = [baseline=-.5ex]
+\tikzstyle{every picture}+=[remember picture] 
+
+\newcommand{\head}[1]{\textnormal{\textbf{#1}}}
+\newcommand{\tikzmark}[2]{\tikz[overlay,remember picture,baseline=(#1.base)] \node (#1) {#2};}
+
+\usepackage[font=footnotesize,labelfont=bf]{caption}
+\usepackage{amsmath}
+\usepackage{xfrac}
+\usepackage{multicol}
+% Standard packages
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{algorithmicx}
+\algdef{SE}[DOWHILE]{Do}{doWhile}{\algorithmicdo}[1]{\algorithmicwhile\ #1}%
+
+%equation
+\newcommand{\argmax}[1]{\underset{#1}{\operatorname{arg}\,\operatorname{max}}\;}
+\newcommand{\argmin}[1]{\underset{#1}{\operatorname{arg}\,\operatorname{min}}\;}
+
+% Set Front Page
+\newcommand\titlegraphicii[1]{\def\inserttitlegraphicii{#1}}
+\titlegraphicii{}
+\setbeamertemplate{title page}
+{
+  \vbox{}
+  {\usebeamercolor[fg]{titlegraphic}\inserttitlegraphic\hfill\inserttitlegraphicii\par}
+ 
+  \begin{centering}
+    \begin{beamercolorbox}[sep=8pt,center]{institute}
+      \usebeamerfont{institute}\insertinstitute
+    \end{beamercolorbox}
+    
+    \begin{beamercolorbox}[sep=8pt,center]{title}
+      \usebeamerfont{title}\inserttitle\par%
+      \ifx\insertsubtitle\@empty%
+      \else%
+        \vskip0.25em%
+        {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}%
+      \fi%     
+    \end{beamercolorbox}%
+    
+    \vskip1em\par
+    \begin{beamercolorbox}[sep=8pt,center]{date}
+      \usebeamerfont{date}\insertdate
+    \end{beamercolorbox}%\vskip0.5em
+    
+    % \begin{beamercolorbox}[sep=8pt,center]{author}
+    %   \usebeamerfont{author}\insertauthor
+    % \end{beamercolorbox}
+  \end{centering}
+  %\vfill
+}
+
+% Front Page
+\title{Visual Event Recognition}
+\author{Presented by Gong Li}
+\date{December 9, 2013}
+
+
+\begin{document}
+\begin{frame}
+	\maketitle
+
+\begin{center}
+\emph{Supervisor:}
+A/P Xu Dong
+
+\vspace{2 mm} 
+
+\emph{Examiner:}
+A/P Cham Tat Jen
+
+\vspace{2 mm} 
+
+\emph{Presented by}
+Gong Li
+\end{center}
+\end{frame}
+
+
+\include{intro}
+
+
+\begin{frame}{Outline}
+\begin{multicols}{2}
+  \tableofcontents
+   \end{multicols}
+\end{frame}
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+   \begin{multicols}{2}
+     \tableofcontents[currentsection,hideothersection]
+   \end{multicols}
+  \end{frame}
+}
+
+
+% \include{ImageRec}
+\include{VideoRec}
+\include{domainAdaptations}
+\include{conclusion}
+
+\section{Demo}
+\begin{frame}
+	\begin{center}
+	\Huge{Demo}
+	\end{center}
+\end{frame}
+
+\section{References}
+\bibliographystyle{IEEEtranS}
+\bibliography{reference}
+\end{document}
